@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"time"
 
-	jump "github.com/faceair/youjumpijump"
+	jump "github.com/songcf/youjumpijump"
 )
 
 var similar *jump.Similar
