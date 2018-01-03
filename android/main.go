@@ -46,18 +46,20 @@ func main() {
 	}()
 
 	var inputRatio float64
+	var similarSleep int
 	var err error
-	if len(os.Args) > 1 {
-		inputRatio, err = strconv.ParseFloat(os.Args[1], 10)
-		if err != nil {
-			log.Fatal(err)
-		}
-	} else {
+	{
 		fmt.Print("input jump ratio (recommend 2.04):")
 		_, err = fmt.Scanln(&inputRatio)
 		if err != nil {
 			log.Printf("input is empty, will use 2.04 as default ratio")
 			inputRatio = 2.04
+		}
+		fmt.Print("input similarSleep (recommend 170):")
+		_, err = fmt.Scanln(&similarSleep)
+		if err != nil {
+			log.Printf("input is empty, will use 170 as default ratio")
+			similarSleep = 170
 		}
 	}
 
@@ -90,7 +92,7 @@ func main() {
 		}
 
 		go func() {
-			time.Sleep(time.Millisecond * 170)
+			time.Sleep(time.Millisecond * time.Duration(similarSleep))
 			jump.MoveFile("jump.test.png")
 			src := screenshot("jump.test.png")
 
