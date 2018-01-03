@@ -34,6 +34,14 @@ func init() {
 	log.SetOutput(io.MultiWriter(os.Stdout, logFile))
 }
 
+func MoveFile(oldName string) {
+	oldFile := basePath + "/" + oldName
+	newFile := basePath + "/debugger/"+strconv.Itoa(TimeStamp()) + oldName
+	if ok, _ := Exists(oldFile); ok {
+		os.Rename(oldFile, newFile)
+	}
+}
+
 func Debugger() {
 	if ok, _ := Exists(basePath + "/jump.png"); ok {
 		os.Rename(basePath+"/jump.png", basePath+"/debugger/"+strconv.Itoa(TimeStamp())+".png")
