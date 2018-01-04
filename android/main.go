@@ -78,7 +78,7 @@ func main() {
 
 		scale := float64(src.Bounds().Max.X) / 720
 		nowDistance := jump.Distance(start, end)
-		similarDistance, nowRatio := 0.0, inputRatio
+		similarDistance, nowRatio := nowDistance, inputRatio
 		{
 			if nowDistance < 200 {
 				nowRatio = -0.0134*nowDistance + 4.952
