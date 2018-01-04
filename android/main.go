@@ -85,10 +85,10 @@ func main() {
 		similarDistance, nowRatio := 0.0, inputRatio
 
 		{
-			if nowDistance < 230 {
-				nowRatio = 2.40
-			} else if nowDistance > 415 {
-				nowRatio = 2.10
+			if nowDistance < 225 {
+				nowRatio = -0.006*nowDistance + 3.6
+			} else if nowDistance > 275 {
+				nowRatio = -0.01/15*nowDistance + 7.3/3
 			} else {
 				nowRatio = 2.25
 			}
