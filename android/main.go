@@ -55,11 +55,11 @@ func main() {
 			log.Printf("input is empty, will use 2.25 as default ratio")
 			inputRatio = 2.25
 		}
-		fmt.Print("input similarSleep (recommend 300):")
+		fmt.Print("input similarSleep (recommend 310):")
 		_, err = fmt.Scanln(&similarSleep)
 		if err != nil {
-			log.Printf("input is empty, will use 300 as default ratio")
-			similarSleep = 300
+			log.Printf("input is empty, will use 310 as default ratio")
+			similarSleep = 310
 		}
 	}
 
