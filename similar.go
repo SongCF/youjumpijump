@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 var similarFile *os.File
@@ -40,9 +41,12 @@ type Similar struct {
 	distances    []float64
 	ratios       map[float64]float64
 	defaultRatio float64
+	mtx sync.Mutex
 }
 
 func (s *Similar) Add(distance, ratio float64) {
+	s.mtx.Lock()
+	defer s.mtx.Unlock()
 	similarFile.Write([]byte(fmt.Sprintf("%v,%v\n", distance, ratio)))
 
 	s.distances = append(s.distances, distance)
@@ -50,12 +54,14 @@ func (s *Similar) Add(distance, ratio float64) {
 }
 
 func (s *Similar) Find(nowDistance, nowRatio float64) (similarDistance, simlarRatio float64) {
+	s.mtx.Lock()
+	defer s.mtx.Unlock()
 	sumR := 0.0
 	sumD := 0.0
 	count := 0.0
 
 	for _, distance := range s.distances {
-		if math.Abs(nowDistance-distance) < 10 {
+		if math.Abs(nowDistance-distance) < 5 {
 			count++
 			sumD += distance
 			sumR += s.ratios[distance]

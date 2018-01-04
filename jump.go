@@ -71,10 +71,10 @@ func Debugger2(ratio, distance float64) {
 		newName := fmt.Sprintf(basePath+"/debugger/%d_%.2f_%.2f.png", TimeStamp(), ratio, distance)
 		os.Rename(basePath+"/jump.png", newName)
 	}
-	if ok, _ := Exists(basePath + "/jump.test.png"); ok {
-		newName := fmt.Sprintf(basePath+"/debugger/%d_%.2f_%.2f_test.png", TimeStamp(), ratio, distance)
-		os.Rename(basePath+"/jump.test.png", newName)
-	}
+	//if ok, _ := Exists(basePath + "/jump.test.png"); ok {
+	//	newName := fmt.Sprintf(basePath+"/debugger/%d_%.2f_%.2f_test.png", TimeStamp(), ratio, distance)
+	//	os.Rename(basePath+"/jump.test.png", newName)
+	//}
 	//clear
 	files, err := ioutil.ReadDir(basePath + "/debugger/")
 	if err != nil {

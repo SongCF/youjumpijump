@@ -36,7 +36,7 @@ func screenshot(filename string) image.Image {
 
 func main() {
 	defer func() {
-		jump.Debugger()
+		//jump.Debugger()
 		if e := recover(); e != nil {
 			log.Printf("%s: %s", e, debug.Stack())
 			fmt.Print("the program has crashed, press any key to exit")
@@ -45,8 +45,7 @@ func main() {
 		}
 	}()
 
-	var inputRatio float64
-	var similarSleep int
+	var inputRatio, similarSleep float64
 	var err error
 	{
 		fmt.Print("input jump ratio (recommend 2.25):")
@@ -88,8 +87,11 @@ func main() {
 			} else {
 				nowRatio = 2.25
 			}
+			//
+			if nowDistance < 200 {
+				similarDistance, nowRatio = similar.Find(nowDistance, nowRatio)
+			}
 		}
-		similarDistance, nowRatio = similar.Find(nowDistance, nowRatio)
 		log.Printf("from:%v to:%v distance:%.2f similar:%.2f ratio:%v press:%.2fms ", start, end, nowDistance, similarDistance, nowRatio, nowDistance*nowRatio)
 		_, err = exec.Command("/system/bin/sh", "/system/bin/input", "swipe",
 			strconv.FormatFloat(float64(start[0])*scale, 'f', 0, 32),
@@ -115,8 +117,26 @@ func main() {
 				}
 			}
 		}()
+		go correct(start, similarSleep, nowDistance, nowRatio)
 
 		jump.Debugger2(nowRatio, nowDistance)
 		time.Sleep(time.Millisecond * 1000)
+	}
+}
+
+func correct(start []int, similarSleep, nowDistance, nowRatio float64) {
+	time.Sleep(time.Millisecond * time.Duration(similarSleep))
+	newName := fmt.Sprintf("debugger/%d_%.2f_%.2f_test.png", jump.TimeStamp(), nowRatio, nowDistance)
+	src := screenshot(newName)
+
+	finally, _ := jump.Find(src)
+	if finally != nil {
+		finallyDistance := jump.Distance(start, finally)
+		finallyRatio := (nowDistance * nowRatio) / finallyDistance
+
+		if finallyRatio > nowRatio/3 && finallyRatio < nowRatio*3 {
+			time.Sleep(time.Second * 60) //避免把最后一次死亡的放进来
+			similar.Add(finallyDistance, finallyRatio)
+		}
 	}
 }
