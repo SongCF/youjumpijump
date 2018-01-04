@@ -46,7 +46,7 @@ func main() {
 	}()
 
 	var inputRatio float64
-	var similarSleep int
+	//var similarSleep int
 	var err error
 	{
 		fmt.Print("input jump ratio (recommend 2.04):")
@@ -55,12 +55,12 @@ func main() {
 			log.Printf("input is empty, will use 2.04 as default ratio")
 			inputRatio = 2.04
 		}
-		fmt.Print("input similarSleep (recommend 170):")
-		_, err = fmt.Scanln(&similarSleep)
-		if err != nil {
-			log.Printf("input is empty, will use 170 as default ratio")
-			similarSleep = 170
-		}
+		//fmt.Print("input similarSleep (recommend 170):")
+		//_, err = fmt.Scanln(&similarSleep)
+		//if err != nil {
+		//	log.Printf("input is empty, will use 170 as default ratio")
+		//	similarSleep = 170
+		//}
 	}
 
 	similar = jump.NewSimilar(inputRatio)
@@ -81,33 +81,43 @@ func main() {
 
 		scale := float64(src.Bounds().Max.X) / 720
 		nowDistance := jump.Distance(start, end)
-		similarDistance, nowRatio := similar.Find(nowDistance)
-		// similarDistance, nowRatio := 0.0, inputRatio
+		// similarDistance, nowRatio := similar.Find(nowDistance)
+		similarDistance, nowRatio := 0.0, inputRatio
+
+		{
+			// y = 69136.44/66248*x^2 - 364*x + 31682.4
+			nowRatio = 69136.44/66248*nowDistance*nowDistance - 364*nowDistance + 31682.4
+		}
 
 		log.Printf("from:%v to:%v distance:%.2f similar:%.2f ratio:%v press:%.2fms ", start, end, nowDistance, similarDistance, nowRatio, nowDistance*nowRatio)
 
-		_, err = exec.Command("/system/bin/sh", "/system/bin/input", "swipe", strconv.FormatFloat(float64(start[0])*scale, 'f', 0, 32), strconv.FormatFloat(float64(start[1])*scale, 'f', 0, 32), strconv.FormatFloat(float64(end[0])*scale, 'f', 0, 32), strconv.FormatFloat(float64(end[1])*scale, 'f', 0, 32), strconv.Itoa(int(nowDistance*nowRatio))).Output()
+		_, err = exec.Command("/system/bin/sh", "/system/bin/input", "swipe",
+			strconv.FormatFloat(float64(start[0])*scale, 'f', 0, 32),
+			strconv.FormatFloat(float64(start[1])*scale, 'f', 0, 32),
+			strconv.FormatFloat(float64(end[0])*scale, 'f', 0, 32),
+			strconv.FormatFloat(float64(end[1])*scale, 'f', 0, 32),
+			strconv.Itoa(int(nowDistance*nowRatio))).Output()
 		if err != nil {
 			panic("touch failed")
 		}
 
-		go func() {
-			time.Sleep(time.Millisecond * time.Duration(similarSleep))
-			jump.MoveFile("jump.test.png")
-			src := screenshot("jump.test.png")
-
-			finally, _ := jump.Find(src)
-			if finally != nil {
-				finallyDistance := jump.Distance(start, finally)
-				finallyRatio := (nowDistance * nowRatio) / finallyDistance
-				if finallyRatio > nowRatio/2 && finallyRatio < nowRatio*2 {
-					go func() {
-						time.Sleep(time.Second * 10)
-						similar.Add(finallyDistance, finallyRatio)
-					}()
-				}
-			}
-		}()
-		time.Sleep(time.Millisecond * 1500)
+		//go func() {
+		//	time.Sleep(time.Millisecond * time.Duration(similarSleep))
+		//	jump.MoveFile("jump.test.png")
+		//	src := screenshot("jump.test.png")
+		//
+		//	finally, _ := jump.Find(src)
+		//	if finally != nil {
+		//		finallyDistance := jump.Distance(start, finally)
+		//		finallyRatio := (nowDistance * nowRatio) / finallyDistance
+		//		if finallyRatio > nowRatio/2 && finallyRatio < nowRatio*2 {
+		//			go func() {
+		//				time.Sleep(time.Second * 10)
+		//				similar.Add(finallyDistance, finallyRatio)
+		//			}()
+		//		}
+		//	}
+		//}()
+		time.Sleep(time.Millisecond * 1000)
 	}
 }
