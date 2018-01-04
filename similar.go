@@ -49,7 +49,7 @@ func (s *Similar) Add(distance, ratio float64) {
 	s.ratios[distance] = ratio
 }
 
-func (s *Similar) Find(nowDistance float64) (similarDistance, simlarRatio float64) {
+func (s *Similar) Find(nowDistance, nowRatio float64) (similarDistance, simlarRatio float64) {
 	sumR := 0.0
 	sumD := 0.0
 	count := 0.0
@@ -61,8 +61,8 @@ func (s *Similar) Find(nowDistance float64) (similarDistance, simlarRatio float6
 			sumR += s.ratios[distance]
 		}
 	}
-	if count < 3 {
-		return 0, s.defaultRatio
+	if count < 1 {
+		return 0, nowRatio
 	}
 
 	return sumD / count, sumR / count

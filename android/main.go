@@ -79,9 +79,7 @@ func main() {
 
 		scale := float64(src.Bounds().Max.X) / 720
 		nowDistance := jump.Distance(start, end)
-		// similarDistance, nowRatio := similar.Find(nowDistance)
 		similarDistance, nowRatio := 0.0, inputRatio
-
 		{
 			if nowDistance < 200 {
 				nowRatio = -0.0134*nowDistance + 4.952
@@ -90,24 +88,35 @@ func main() {
 			} else {
 				nowRatio = 2.25
 			}
-
 		}
-
+		similarDistance, nowRatio = similar.Find(nowDistance, nowRatio)
 		log.Printf("from:%v to:%v distance:%.2f similar:%.2f ratio:%v press:%.2fms ", start, end, nowDistance, similarDistance, nowRatio, nowDistance*nowRatio)
-
 		_, err = exec.Command("/system/bin/sh", "/system/bin/input", "swipe",
 			strconv.FormatFloat(float64(start[0])*scale, 'f', 0, 32),
 			strconv.FormatFloat(float64(start[1])*scale, 'f', 0, 32),
 			strconv.FormatFloat(float64(end[0])*scale, 'f', 0, 32),
 			strconv.FormatFloat(float64(end[1])*scale, 'f', 0, 32),
-			strconv.Itoa(int(nowDistance*nowRatio))).Output()
+			strconv.Itoa(int(similarDistance*nowRatio))).Output()
 		if err != nil {
 			panic("touch failed")
 		}
+
+		go func() {
+			time.Sleep(time.Millisecond * time.Duration(similarSleep))
+			src := screenshot("jump.test.png")
+
+			finally, _ := jump.Find(src)
+			if finally != nil {
+				finallyDistance := jump.Distance(start, finally)
+				finallyRatio := (nowDistance * nowRatio) / finallyDistance
+
+				if finallyRatio > nowRatio/2 && finallyRatio < nowRatio*2 {
+					similar.Add(finallyDistance, finallyRatio)
+				}
+			}
+		}()
+
 		jump.Debugger2(nowRatio, nowDistance)
-
-
-
 		time.Sleep(time.Millisecond * 1000)
 	}
 }

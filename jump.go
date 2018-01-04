@@ -70,20 +70,24 @@ func Debugger2(ratio, distance float64) {
 	if ok, _ := Exists(basePath + "/jump.png"); ok {
 		newName := fmt.Sprintf(basePath+"/debugger/%d_%.2f_%.2f.png", TimeStamp(), ratio, distance)
 		os.Rename(basePath+"/jump.png", newName)
-		files, err := ioutil.ReadDir(basePath + "/debugger/")
-		if err != nil {
-			panic(err)
-		}
-
-		for _, f := range files {
-			fname := f.Name()
-			ext := filepath.Ext(fname)
-			name := fname[0 : len(fname)-len(ext)]
-			l := strings.SplitN(name, "_", -1)
-			if ts, err := strconv.Atoi(l[0]); err == nil {
-				if TimeStamp()-ts > 120 {
-					os.Remove(basePath + "/debugger/" + fname)
-				}
+	}
+	if ok, _ := Exists(basePath + "/jump.test.png"); ok {
+		newName := fmt.Sprintf(basePath+"/debugger/%d_%.2f_%.2f_test.png", TimeStamp(), ratio, distance)
+		os.Rename(basePath+"/jump.test.png", newName)
+	}
+	//clear
+	files, err := ioutil.ReadDir(basePath + "/debugger/")
+	if err != nil {
+		panic(err)
+	}
+	for _, f := range files {
+		fname := f.Name()
+		ext := filepath.Ext(fname)
+		name := fname[0 : len(fname)-len(ext)]
+		l := strings.SplitN(name, "_", -1)
+		if ts, err := strconv.Atoi(l[0]); err == nil {
+			if TimeStamp()-ts > 120 {
+				os.Remove(basePath + "/debugger/" + fname)
 			}
 		}
 	}
