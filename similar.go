@@ -12,7 +12,7 @@ import (
 var similarFile *os.File
 
 func init() {
-	similarFile, _ = os.OpenFile(basePath+"/similar.ai", os.O_CREATE|os.O_APPEND|os.O_RDWR, 0666)
+	similarFile, _ = os.OpenFile(basePath+"/jump.ai", os.O_CREATE|os.O_APPEND|os.O_RDWR, 0666)
 }
 
 func NewSimilar(ratio float64) *Similar {
@@ -62,7 +62,7 @@ func (s *Similar) Find(nowDistance, nowRatio float64) (similarDistance, simlarRa
 		}
 	}
 	if count < 1 {
-		return 0, nowRatio
+		return nowDistance, nowRatio
 	}
 
 	return sumD / count, sumR / count
