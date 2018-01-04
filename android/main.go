@@ -86,11 +86,11 @@ func main() {
 
 		{
 			if nowDistance < 230 {
-				nowDistance = 2.40
+				nowRatio = 2.40
 			} else if nowDistance > 415 {
-				nowDistance = 2.10
+				nowRatio = 2.10
 			} else {
-				nowDistance = 2.25
+				nowRatio = 2.25
 			}
 
 		}
