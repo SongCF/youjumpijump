@@ -85,8 +85,14 @@ func main() {
 		similarDistance, nowRatio := 0.0, inputRatio
 
 		{
-			// y = 69136.44/66248*x^2 - 364*x + 31682.4
-			nowRatio = 69136.44/66248*nowDistance*nowDistance - 364*nowDistance + 31682.4
+			if nowDistance < 230 {
+				nowDistance = 2.40
+			} else if nowDistance > 415 {
+				nowDistance = 2.10
+			} else {
+				nowDistance = 2.25
+			}
+
 		}
 
 		log.Printf("from:%v to:%v distance:%.2f similar:%.2f ratio:%v press:%.2fms ", start, end, nowDistance, similarDistance, nowRatio, nowDistance*nowRatio)
