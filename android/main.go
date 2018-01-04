@@ -54,11 +54,11 @@ func main() {
 			log.Printf("input is empty, will use 2.25 as default ratio")
 			inputRatio = 2.25
 		}
-		fmt.Print("input similarSleep (recommend 310):")
+		fmt.Print("input similarSleep (recommend 300):")
 		_, err = fmt.Scanln(&similarSleep)
 		if err != nil {
-			log.Printf("input is empty, will use 310 as default ratio")
-			similarSleep = 310
+			log.Printf("input is empty, will use 300 as default ratio")
+			similarSleep = 300
 		}
 	}
 
@@ -103,20 +103,6 @@ func main() {
 			panic("touch failed")
 		}
 
-		go func() {
-			time.Sleep(time.Millisecond * time.Duration(similarSleep))
-			src := screenshot("jump.test.png")
-
-			finally, _ := jump.Find(src)
-			if finally != nil {
-				finallyDistance := jump.Distance(start, finally)
-				finallyRatio := (nowDistance * nowRatio) / finallyDistance
-
-				if finallyRatio > nowRatio/2 && finallyRatio < nowRatio*2 {
-					similar.Add(finallyDistance, finallyRatio)
-				}
-			}
-		}()
 		go correct(start, similarSleep, nowDistance, nowRatio)
 
 		jump.Debugger2(nowRatio, nowDistance)
