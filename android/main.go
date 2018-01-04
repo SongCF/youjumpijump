@@ -66,8 +66,6 @@ func main() {
 	similar = jump.NewSimilar(inputRatio)
 
 	for {
-		jump.Debugger()
-
 		src := screenshot("jump.png")
 
 		start, end := jump.Find(src)
@@ -85,10 +83,10 @@ func main() {
 		similarDistance, nowRatio := 0.0, inputRatio
 
 		{
-			if nowDistance < 225 {
-				nowRatio = -0.006*nowDistance + 3.65
-			} else if nowDistance > 275 {
-				nowRatio = -0.01/9*nowDistance + 23.9/9
+			if nowDistance < 220 {
+				nowRatio = -0.006*nowDistance + 3.66
+			} else if nowDistance > 300 {
+				nowRatio = -0.00075*nowDistance + 2.475
 			} else {
 				nowRatio = 2.25
 			}
@@ -107,23 +105,7 @@ func main() {
 			panic("touch failed")
 		}
 
-		//go func() {
-		//	time.Sleep(time.Millisecond * time.Duration(similarSleep))
-		//	jump.MoveFile("jump.test.png")
-		//	src := screenshot("jump.test.png")
-		//
-		//	finally, _ := jump.Find(src)
-		//	if finally != nil {
-		//		finallyDistance := jump.Distance(start, finally)
-		//		finallyRatio := (nowDistance * nowRatio) / finallyDistance
-		//		if finallyRatio > nowRatio/2 && finallyRatio < nowRatio*2 {
-		//			go func() {
-		//				time.Sleep(time.Second * 10)
-		//				similar.Add(finallyDistance, finallyRatio)
-		//			}()
-		//		}
-		//	}
-		//}()
+		jump.Debugger2(nowRatio, nowDistance)
 		time.Sleep(time.Millisecond * 1000)
 	}
 }

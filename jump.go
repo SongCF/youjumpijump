@@ -14,6 +14,8 @@ import (
 	"time"
 
 	"github.com/nfnt/resize"
+	"fmt"
+	"strings"
 )
 
 var basePath string
@@ -64,6 +66,29 @@ func Debugger() {
 	}
 }
 
+func Debugger2(ratio, distance float64) {
+	if ok, _ := Exists(basePath + "/jump.png"); ok {
+		newName := fmt.Sprintf(basePath+"/debugger/%d_%.2f_%.2f.png", TimeStamp(), ratio, distance)
+		os.Rename(basePath+"/jump.png", newName)
+		files, err := ioutil.ReadDir(basePath + "/debugger/")
+		if err != nil {
+			panic(err)
+		}
+
+		for _, f := range files {
+			fname := f.Name()
+			ext := filepath.Ext(fname)
+			name := fname[0 : len(fname)-len(ext)]
+			l := strings.SplitN(name, "_", -1)
+			if ts, err := strconv.Atoi(l[0]); err == nil {
+				if TimeStamp()-ts > 120 {
+					os.Remove(basePath + "/debugger/" + fname)
+				}
+			}
+		}
+	}
+}
+
 func Exists(path string) (bool, error) {
 	_, err := os.Stat(path)
 	if err == nil {
@@ -76,7 +101,7 @@ func Exists(path string) (bool, error) {
 }
 
 func TimeStamp() int {
-	return int(time.Now().UnixNano() / int64(time.Second))
+	return int(time.Now().Unix())
 }
 
 func Distance(a, b []int) float64 {
