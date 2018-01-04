@@ -46,21 +46,21 @@ func main() {
 	}()
 
 	var inputRatio float64
-	//var similarSleep int
+	var similarSleep int
 	var err error
 	{
-		fmt.Print("input jump ratio (recommend 2.04):")
+		fmt.Print("input jump ratio (recommend 2.25):")
 		_, err = fmt.Scanln(&inputRatio)
 		if err != nil {
-			log.Printf("input is empty, will use 2.04 as default ratio")
-			inputRatio = 2.04
+			log.Printf("input is empty, will use 2.25 as default ratio")
+			inputRatio = 2.25
 		}
-		//fmt.Print("input similarSleep (recommend 170):")
-		//_, err = fmt.Scanln(&similarSleep)
-		//if err != nil {
-		//	log.Printf("input is empty, will use 170 as default ratio")
-		//	similarSleep = 170
-		//}
+		fmt.Print("input similarSleep (recommend 300):")
+		_, err = fmt.Scanln(&similarSleep)
+		if err != nil {
+			log.Printf("input is empty, will use 300 as default ratio")
+			similarSleep = 300
+		}
 	}
 
 	similar = jump.NewSimilar(inputRatio)
@@ -84,7 +84,7 @@ func main() {
 
 		{
 			if nowDistance < 200 {
-				nowRatio = -0.0135*nowDistance + 4.956
+				nowRatio = -0.0134*nowDistance + 4.952
 			} else if nowDistance > 300 {
 				nowRatio = -0.00075*nowDistance + 2.475
 			} else {
@@ -104,8 +104,10 @@ func main() {
 		if err != nil {
 			panic("touch failed")
 		}
-
 		jump.Debugger2(nowRatio, nowDistance)
+
+
+
 		time.Sleep(time.Millisecond * 1000)
 	}
 }
